@@ -26,6 +26,12 @@ class SpdlogConan(ConanFile):
         "wchar_support": [True, False],
         "wchar_filenames": [True, False],
         "no_exceptions": [True, False],
+        "clock_coarse": [True, False],
+        "prevent_child_fd": [True, False],
+        "no_thread_id": [True, False],
+        "no_atomic_levels": [True, False],
+        "disable_default_logger": [True, False],
+        "use_std_format": [True, False],
     }
     default_options = {
         "shared": False,
@@ -34,6 +40,12 @@ class SpdlogConan(ConanFile):
         "wchar_support": False,
         "wchar_filenames": False,
         "no_exceptions": False,
+        "clock_coarse": False,
+        "prevent_child_fd": False,
+        "no_thread_id": False,
+        "no_atomic_levels": False,
+        "disable_default_logger": False,
+        "use_std_format": False,
     }
 
     def config_options(self):
@@ -73,6 +85,8 @@ class SpdlogConan(ConanFile):
             check_min_cppstd(self, 11)
         if self.settings.os != "Windows" and (self.options.wchar_support or self.options.wchar_filenames):
             raise ConanInvalidConfiguration("wchar is only supported under windows")
+        if self.settings.os != "Linux" and (self.options.clock_coarse):
+            raise ConanInvalidConfiguration("clock_coarse is only supported under linux")
         if self.options.get_safe("shared") and is_msvc_static_runtime(self):
             raise ConanInvalidConfiguration("Visual Studio build for shared library with MT runtime is not supported")
 
@@ -95,6 +109,12 @@ class SpdlogConan(ConanFile):
             tc.variables["SPDLOG_WCHAR_FILENAMES"] = self.options.wchar_filenames
             tc.variables["SPDLOG_INSTALL"] = True
             tc.variables["SPDLOG_NO_EXCEPTIONS"] = self.options.no_exceptions
+            tv.variables["SPDLOG_CLOCK_COARSE"] = self.options.clock_coarse
+            tv.variables["SPDLOG_PREVENT_CHILD_FD"] = self.options.prevent_child_fd
+            tv.variables["SPDLOG_NO_THREAD_ID"] = self.options.no_thread_id
+            tv.variables["SPDLOG_NO_ATOMIC_LEVELS"] = self.options.no_atomic_levels
+            tv.variables["SPDLOG_DISABLE_DEFAULT_LOGGER"] = self.options.disable_default_logger
+            tv.variables["SPDLOG_USE_STD_FORMAT"] = self.options.use_std_format
             if self.settings.os in ("iOS", "tvOS", "watchOS"):
                 tc.variables["SPDLOG_NO_TLS"] = True
             tc.cache_variables["CMAKE_POLICY_DEFAULT_CMP0091"] = "NEW"
