@@ -81,6 +81,9 @@ class open62541pp(ConanFile):
         self_version = Version(self.version)
         open62541_version = "1.2.6"
 
+        if self_version >= "0.2.0":
+            open62541_version = "1.3.4"
+
         self.requires(f"open62541/{open62541_version}")
 
     def validate(self):

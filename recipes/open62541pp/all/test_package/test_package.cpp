@@ -3,24 +3,29 @@
 #include "open62541pp/open62541pp.h"
 
 int main() {
-    opcua::Server server;
+    opcua::Server server(4840 /* port */);
 
-    const auto        myIntegerNodeId = opcua::NodeId("the.answer", 1);
-    const std::string myIntegerName   = "the answer";
+    server.setApplicationName("open62541pp server example");
+    server.setLogger([](auto level, auto category, auto msg) {
+        std::cout << "[" << opcua::getLogLevelName(level) << "] "
+                  << "[" << opcua::getLogCategoryName(category) << "] " << msg << std::endl;
+    });
 
-    // create node
-    auto parentNode    = server.getObjectsNode();
-    auto myIntegerNode = parentNode.addVariable(myIntegerNodeId, myIntegerName, opcua::Type::Int32);
+    const opcua::NodeId myIntegerNodeId{1, "the.answer"};
+    const std::string myIntegerName{"the answer"};
+
+    // add variable node
+    auto parentNode = server.getObjectsNode();
+    auto myIntegerNode = parentNode.addVariable(myIntegerNodeId, myIntegerName);
 
     // set node attributes
-    myIntegerNode.setDisplayName("the answer");
-    myIntegerNode.setDescription("the answer");
+    myIntegerNode.writeDataType(opcua::Type::Int32);
+    myIntegerNode.writeDisplayName("en-US", "the answer");
+    myIntegerNode.writeDescription("en-US", "the answer");
 
     // write value
-    myIntegerNode.write(42);
+    myIntegerNode.writeScalar(42);
 
     // read value
-    std::cout << "The answer is: " << myIntegerNode.read<int>() << std::endl;
-
-    return 0;
+    std::cout << "The answer is: " << myIntegerNode.readScalar<int>() << std::endl;
 }
