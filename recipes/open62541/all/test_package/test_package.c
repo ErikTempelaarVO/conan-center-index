@@ -4,7 +4,6 @@
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/server.h>
 #include <open62541/server_config_default.h>
-#include <open62541/network_tcp.h>
 #endif
 
 /* Files namespace_foo_flt_generated.h and namespace_foo_flt_generated.c are created from FooFlt.NodeSet2.xml in the
@@ -52,8 +51,7 @@ int main(void) {
         {   
             running = false;
             portNumber = portNumber + 1;
-            UA_Server_getConfig(server)->networkLayersSize = 0;
-            UA_ServerConfig_addNetworkLayerTCP(UA_Server_getConfig(server), portNumber, 0, 0);
+            UA_ServerConfig_setBasics_withPort(UA_Server_getConfig(server), portNumber);
             running = true;
             return_code = UA_Server_run(server, &running);
 

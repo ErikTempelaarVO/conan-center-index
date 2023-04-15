@@ -1,4 +1,5 @@
 from conan import ConanFile
+from conans import ConanFile, CMake, tools
 from conan.tools.cmake import cmake_layout, CMake, CMakeToolchain, CMakeDeps
 from conan.tools.scm import Version
 from conan.tools.files import apply_conandata_patches, collect_libs, export_conandata_patches, rename, rm, rmdir, get
@@ -236,8 +237,8 @@ class Open62541Conan(ConanFile):
                     "When web_socket is enabled, libwebsockets:with_ssl must have the value of open62541:encryption")
 
     def source(self):
-        get(self, **self.conan_data["sources"][self.version],
-            destination=self.source_folder, strip_root=True)
+        git = tools.Git(folder=".")
+        git.clone("https://github.com/open62541/open62541.git", "master")
 
         submodule_filename = os.path.join(
             self.recipe_folder, 'submoduledata.yml')
