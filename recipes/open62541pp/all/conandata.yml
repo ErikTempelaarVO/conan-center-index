@@ -1,5 +1,9 @@
 sources:
   # Newer versions at the top
+  "0.3.0":
+    url:
+    - "https://github.com/open62541pp/open62541pp/archive/refs/tags/v0.3.0.tar.gz"
+    sha256: "4a1f03f0c61f5f49d3cd83269dd809c955fa7047d5f1a3e607052e15e3503254"
   "0.2.0":
     url:
     - "https://github.com/open62541pp/open62541pp/archive/refs/tags/v0.2.0.tar.gz"

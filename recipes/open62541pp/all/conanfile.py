@@ -16,7 +16,7 @@ class open62541pp(ConanFile):
     description = "open62541++ is a C++ wrapper built on top of the amazing open62541 OPC UA (OPC Unified Architecture) library"
     license = "MPL-2.0"
     url = "https://github.com/conan-io/conan-center-index"
-    homepage = "https://github.com/project/package"
+    homepage = "https://github.com/open62541pp/open62541pp/"
     topics = ("cpp", "cpp17", "opcua", "open62541")
     package_type = "library"
     settings = "os", "arch", "compiler", "build_type"
@@ -25,30 +25,12 @@ class open62541pp(ConanFile):
         "fPIC": [True, False],
         "internal_open62541": [True, False],
         "build_documentation": [True, False],
-        # "build_examples": [True, False],
-        # "build_tests": [True, False],
-        # "clang_tidy": [True, False],
-        # "coverage": [True, False],
-        # "sanitizer_address": [True, False],
-        # "sanitizer_leak": [True, False],
-        # "sanitizer_memory": [True, False],
-        # "sanitizer_thread": [True, False],
-        # "sanitizer_undefined_behaviour": [True, False],
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "internal_open62541": False,
         "build_documentation": False,
-        # "build_examples": False,
-        # "build_tests": False,
-        # "clang_tidy": False,
-        # "coverage": False,
-        # "sanitizer_address": False,
-        # "sanitizer_leak": False,
-        # "sanitizer_memory": False,
-        # "sanitizer_thread": False,
-        # "sanitizer_undefined_behaviour": False,
     }
 
     @property
@@ -123,9 +105,9 @@ class open62541pp(ConanFile):
         cmake.build()
 
     def package(self):
+        cmake = CMake(self)
         copy(self, pattern="LICENSE", dst=os.path.join(self.package_folder, "licenses"), src=self.source_folder)
-        copy(self, pattern="*.h", dst=os.path.join(self.package_folder, "include"), src=os.path.join(self.source_folder, "include"))
-        copy(self, pattern="*.a", src=os.path.join(self.build_folder, "bin"), dst=os.path.join(self.package_folder, "lib"), keep_path=False)
+        cmake.install()
 
         rmdir(self, os.path.join(self.package_folder, "lib", "pkgconfig"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
